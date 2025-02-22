@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "376221713582",
+    "project_id": "order-food-61739",
+    "storage_bucket": "order-food-61739.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376221713582:android:ee0338b22ff0083b22993f",
+        "android_client_info": {
+          "package_name": "com.sahiwal.onlinefoodapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLsLwISh8OgKAavdde6-aB1BMyD72_NXE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
