@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.SignupActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,7 +23,6 @@
                 />
 
             <LinearLayout
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -66,12 +59,12 @@
                 android:padding="16dp"
                 android:textSize="16sp"
                 android:inputType="text"
-                android:hint="email text"
+                android:hint="Email address"
                 android:textColorHint="@color/black"
                 android:textColor="@color/black"
                 android:textAlignment="center"
 
-                 />
+                />
             <EditText
 
                 android:id="@+id/passwordTxt"
@@ -85,32 +78,41 @@
                 android:background="@drawable/edit_text_bg"
                 android:padding="16dp"
                 android:inputType="text"
-                android:hint="password text"
+                android:hint="Password text"
                 android:textColorHint="@color/black"
                 android:textColor="@color/black"
                 android:textAlignment="center"
 
                 />
-            <TextView
-                android:id="@+id/forgetPasswordBtn"
+            <EditText
+
+                android:id="@+id/confirmPasswordTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:ems="10"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:background="@drawable/edit_text_bg"
+                android:padding="16dp"
                 android:inputType="text"
-                android:text="Forget Password?"
+                android:hint="Confirm password text"
+                android:textColorHint="@color/black"
                 android:textColor="@color/black"
                 android:textAlignment="center"
+
                 />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/loginBtn"
+                android:id="@+id/signUpBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:textSize="16sp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
-                android:text="Login"
+                android:text="SignUp"
                 style="@style/Widget.AppCompat.Button"
                 android:background="@drawable/btn_bg"
                 android:textColor="@color/white"
@@ -182,17 +184,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="You aren't a user?"
+                    android:text="Are you a member?"
                     android:textSize="16sp"
-                    android:textColor="@color/blue_gray"/>
+                    android:textColor="@color/black"/>
                 <TextView
-                    android:id="@+id/signUpBtn"
+                    android:id="@+id/loginBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Signup"
+                    android:text=" Login"
                     android:layout_margin="2dp"
-                    android:textColor="@color/red"/>
+                    android:textColor="@color/blue_gray"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
