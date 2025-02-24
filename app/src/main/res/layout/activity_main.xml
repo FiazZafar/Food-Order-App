@@ -175,7 +175,7 @@
 
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/priceSpinner"
+                    android:id="@+id/linearlayout"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="0.333"
@@ -189,6 +189,7 @@
                         android:src="@drawable/dollar"
                         android:layout_marginStart="8dp"/>
                     <Spinner
+                        android:id="@+id/priceSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
