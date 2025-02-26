@@ -1,6 +1,7 @@
 package com.sahiwal.onlinefoodapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import com.sahiwal.onlinefoodapp.models.Category;
 
 import java.util.ArrayList;
 
-import javax.microedition.khronos.opengles.GL;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
@@ -68,6 +68,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 .getImagePath(),"drawable",holder.itemView.getContext().getPackageName());
         Glide.with(context).load(drawableResourceId).into(holder.productImage);
         Glide.with(context).load(currentCategory.getImagePath()).into(holder.productImage);
+
+        holder.itemView.setOnClickListener(view ->
+        {
+            Intent intent = new Intent(context, FoodListByCategory.class);
+            intent.putExtra("catergoryId",currentCategory.getId());
+            context.startActivity(intent);
+
+        });
     }
 
     @Override

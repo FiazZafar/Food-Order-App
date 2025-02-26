@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.adapters.BestFoodAdapter;
 import com.sahiwal.onlinefoodapp.adapters.CategoryAdapter;
+import com.sahiwal.onlinefoodapp.adapters.FoodListByCategory;
 import com.sahiwal.onlinefoodapp.databinding.ActivityMainBinding;
 import com.sahiwal.onlinefoodapp.models.Category;
 import com.sahiwal.onlinefoodapp.models.Food;
@@ -56,13 +57,22 @@ public class MainActivity extends BasicActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }});
-
+        binding.searchBarBtn.setOnClickListener(view -> {
+            String searchedItem = binding.searchBarEdt.getText().toString().trim();
+            if (searchedItem == ""){
+                Intent intent = new Intent(MainActivity.this, FoodListByCategory.class);
+                intent.putExtra("searchedItem",searchedItem);
+                intent.putExtra("")
+                startActivity(intent);
+            }
+        }
+        );
          initializeSpinner("Location", Location.class,locationSpinner);
         initializeSpinner("Price", Price.class,priceSpinner);
         initializeSpinner("Time", Time.class,timeSpinner);
 
         initBestFood();
-
+        initCategory();
         foodRecycler = new RecyclerView(this);
         foodRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this,
                 LinearLayoutManager.HORIZONTAL,false));
