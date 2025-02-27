@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.activities.DetailActivity;
-import com.sahiwal.onlinefoodapp.activities.FoodListActivity;
 import com.sahiwal.onlinefoodapp.models.Food;
 
 import java.io.Serializable;
@@ -41,7 +39,7 @@ public class FoodListByCategory extends RecyclerView.Adapter<FoodListByCategory.
        holder.productName.setText(myFood.getTitle());
        holder.productTime.setText(myFood.getTimeValue() + "mins");
        holder.productPrice.setText("$ " + myFood.getPrice());
-       holder.productRating.setText(myFood.getStar() + "ratings");
+       holder.productRating.setText(String.valueOf(myFood.getStar()));
        Glide.with(context).load(myFood.getImagePath()).into(holder.productImage);
 
 

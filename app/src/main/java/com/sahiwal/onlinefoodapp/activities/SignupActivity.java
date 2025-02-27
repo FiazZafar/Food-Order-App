@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.databinding.ActivitySignupBinding;
+import com.sahiwal.onlinefoodapp.helper.TinyDB;
 
 public class SignupActivity extends BasicActivity {
     ActivitySignupBinding binding;
@@ -34,6 +35,7 @@ public class SignupActivity extends BasicActivity {
 
     private void setElements() {
       String emailTxt =  binding.emailTxt.getText().toString();
+      String userName =  binding.nameTxt.getText().toString();
       String passwordTxt = binding.passwordTxt.getText().toString();
       String confirmPassTxt = binding.confirmPasswordTxt.getText().toString();
       if (passwordTxt.length() < 6){
@@ -41,18 +43,20 @@ public class SignupActivity extends BasicActivity {
       } else if (! passwordTxt.equals(confirmPassTxt)) {
             binding.passwordTxt.setError("password doesn't match...");
             binding.confirmPasswordTxt.setError("password doesn't match...");
-      } else if (emailTxt != "null" || passwordTxt != null || confirmPassTxt != null) {
+      } else if (emailTxt == null || passwordTxt == null || confirmPassTxt == null) {
             binding.loginBtn.setError("fill all credentials first...");
       }else {
-          setUpCustomSignUp(emailTxt,passwordTxt);
+          setUpCustomSignUp(emailTxt,passwordTxt,userName);
       }
     }
-    private void setUpCustomSignUp(String emailTxt,String passwordTxt) {
-        mAuth.signInWithEmailAndPassword(emailTxt,passwordTxt)
+    private void setUpCustomSignUp(String emailTxt,String passwordTxt,String userName) {
+        mAuth.createUserWithEmailAndPassword(emailTxt,passwordTxt)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         Toast.makeText(SignupActivity.this, "Login Succeessfull...", Toast.LENGTH_SHORT).show();
+                        tinyDB.putString("userName",userName);
                         startActivity(new Intent(SignupActivity.this, MainActivity.class));
+
                     }else {
                         Toast.makeText(this, "Login failed...", Toast.LENGTH_SHORT).show();
                     }

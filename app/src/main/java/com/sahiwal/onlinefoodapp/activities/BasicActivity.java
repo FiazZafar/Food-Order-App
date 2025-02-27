@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.sahiwal.onlinefoodapp.R;
+import com.sahiwal.onlinefoodapp.helper.TinyDB;
 
 public class BasicActivity extends AppCompatActivity {
     FirebaseAuth mAuth ;
     FirebaseDatabase mDatabase;
+    TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +21,7 @@ public class BasicActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
-
+        tinyDB = new TinyDB(this);
     }
 
     public void signUpWithGoogle() {

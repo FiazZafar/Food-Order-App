@@ -32,14 +32,14 @@ public class FoodListActivity extends BasicActivity {
     ActivityFoodListBinding binding;
     int categoryId;
     boolean isSearch;
-    String searchText;
+    String searchText,categoryName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityFoodListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         binding.backBtn.setOnClickListener(view -> finish());
 
        getIntents();
@@ -47,7 +47,8 @@ public class FoodListActivity extends BasicActivity {
     }
     private void getIntents(){
         Intent intent = getIntent();
-        categoryId = intent.getIntExtra("catergoryId",-1);
+        categoryId = intent.getIntExtra("categoryId",-1);
+        categoryName = intent.getStringExtra("categoryName");
         searchText = intent.getStringExtra("searchedItem");
         isSearch = intent.getBooleanExtra("isSearched",false);
     }
@@ -58,14 +59,18 @@ public class FoodListActivity extends BasicActivity {
         binding.progressBar.setVisibility(VISIBLE);
         Query query;
         if (isSearch){
-                query = myRef.orderByChild("Title").equalTo(searchText).startAt(searchText).endAt(searchText);
+                query = myRef.orderByChild("Title").equalTo(searchText);
+                binding.listTitle.setText(searchText);
         }else {
              query = myRef.orderByChild("CategoryId").equalTo(categoryId);
+            binding.listTitle.setText(categoryName);
+
         }
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                myList.clear();
                 if (snapshot.exists()){
                     for (DataSnapshot snapshot1 : snapshot.getChildren()){
                         myList.add(snapshot1.getValue(Food.class));
@@ -73,8 +78,16 @@ public class FoodListActivity extends BasicActivity {
                     if (myList.size() > 0){
                         binding.foodListRecycler.setLayoutManager(new GridLayoutManager(FoodListActivity.this,2));
                         binding.foodListRecycler.setAdapter(new FoodListByCategory(myList));
-                    binding.progressBar.setVisibility(GONE);
+                    }else {
+                        try {
+                            binding.progressBar.wait(5000);
+                            binding.progressBar.setVisibility(GONE);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                    binding.progressBar.setVisibility(GONE);
+
                 }
             }
 

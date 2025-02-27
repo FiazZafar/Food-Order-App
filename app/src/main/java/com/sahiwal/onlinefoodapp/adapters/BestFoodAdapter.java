@@ -13,10 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.sahiwal.onlinefoodapp.R;
+import com.sahiwal.onlinefoodapp.activities.DetailActivity;
 import com.sahiwal.onlinefoodapp.activities.MainActivity;
 import com.sahiwal.onlinefoodapp.models.Food;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class BestFoodAdapter extends RecyclerView.Adapter<BestFoodAdapter.ViewHolder> {
     ArrayList<Food> myFood;
@@ -34,18 +37,29 @@ public class BestFoodAdapter extends RecyclerView.Adapter<BestFoodAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull BestFoodAdapter.ViewHolder holder, int position) {
-            Food currentFood = myFood.get(position);
-            holder.title.setText(currentFood.getTitle());
-            holder.price.setText("$ " + currentFood.getPrice());
-            holder.time.setText(currentFood.getTimeValue());
-            holder.rating.setText(String.valueOf(currentFood.getStar()));
-            holder.cartBtn.setOnClickListener(view -> context.startActivity(new Intent(context, MainActivity.class)));
+        Food currentFood = myFood.get(position);
 
-            Glide.with(context).load(currentFood.getImagePath())
-            .placeholder(R.drawable.intro_pic)
-            .into(holder.image);
+        // Set text values
+        holder.title.setText(currentFood.getTitle());
+        holder.price.setText(String.format(Locale.getDefault(), "$%.2f", currentFood.getPrice())); // Format price
+        holder.time.setText(currentFood.getTimeValue() + " min");
+        holder.rating.setText(String.valueOf(currentFood.getStar()));
+
+        // Set click listener for cart button
+        holder.cartBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("object", (Serializable) currentFood); // Pass food ID or other details
+            context.startActivity(intent);
+        });
+
+        // Load image using Glide with error handling
+        String imagePath = currentFood.getImagePath();
+        if (imagePath != null && !imagePath.isEmpty()) {
+            Glide.with(context)
+                    .load(imagePath)
+                    .into(holder.image);
+        }
     }
-
     @Override
     public int getItemCount() {
         return myFood.size();

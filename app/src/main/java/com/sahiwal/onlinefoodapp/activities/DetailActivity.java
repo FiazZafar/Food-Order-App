@@ -24,6 +24,7 @@ public class DetailActivity extends BasicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -33,34 +34,36 @@ public class DetailActivity extends BasicActivity {
 
     private void setElements() {
             managmentCart = new ManagmentCart(this);
+            if (foodObj != null){
 
-            binding.backBtn.setOnClickListener(view -> finish());
-            binding.productTitle.setText(foodObj.getTitle());
-            binding.descriptionTxt.setText(foodObj.getDescription());
-            binding.currentPrice.setText("$ " + String.valueOf(foodObj.getPrice()));
-            binding.totalTimeTxt.setText(foodObj.getTimeValue() + "mins");
-            binding.ratingTxt.setText(String.valueOf(foodObj.getStar()));
-            binding.totalPriceTxt.setText(String.valueOf(num * foodObj.getPrice()));
-            binding.addToCartBtn.setOnClickListener(view ->startActivity(new Intent(DetailActivity.this, CartActivity.class)));
+                binding.backBtn.setOnClickListener(view -> finish());
+                binding.productTitle.setText(foodObj.getTitle());
+                binding.descriptionTxt.setText(foodObj.getDescription());
+                binding.currentPrice.setText("$ " + String.valueOf(foodObj.getPrice()));
+                binding.totalTimeTxt.setText(foodObj.getTimeValue() + "mins");
+                binding.ratingTxt.setText(String.valueOf(foodObj.getStar()));
+                binding.totalPriceTxt.setText(String.valueOf(num * foodObj.getPrice()));
+                binding.addToCartBtn.setOnClickListener(view ->startActivity(new Intent(DetailActivity.this, CartActivity.class)));
 
-            Glide.with(this).load(foodObj.getImagePath()).into(binding.productImage);
+                Glide.with(this).load(foodObj.getImagePath()).into(binding.productImage);
 
-            binding.plusBtn.setOnClickListener(view ->{
-                num = num + 1;
-                binding.totalQuantity.setText(String.valueOf(num));
-                binding.totalPriceTxt.setText("$ " + num * foodObj.getPrice() );
-            });
-            binding.minusBtn.setOnClickListener(view ->{
-                if (num > 1){
-                    num = num - 1;
+                binding.plusBtn.setOnClickListener(view ->{
+                    num = num + 1;
                     binding.totalQuantity.setText(String.valueOf(num));
                     binding.totalPriceTxt.setText("$ " + num * foodObj.getPrice() );
-                }
-            });
-            binding.addToCartBtn.setOnClickListener(view ->{
-                foodObj.setNumberInCart(num);
-                managmentCart.insertFood(foodObj);
-            });
+                });
+                binding.minusBtn.setOnClickListener(view ->{
+                    if (num > 1){
+                        num = num - 1;
+                        binding.totalQuantity.setText(String.valueOf(num));
+                        binding.totalPriceTxt.setText("$ " + num * foodObj.getPrice() );
+                    }
+                });
+                binding.addToCartBtn.setOnClickListener(view ->{
+                    foodObj.setNumberInCart(num);
+                    managmentCart.insertFood(foodObj);
+                });
+            }
     }
 
     private void getIntents() {

@@ -18,7 +18,8 @@ public class LoginActivity extends BasicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         binding.loginBtn.setOnClickListener(v -> getCredentials());
         binding.signUpBtn.setOnClickListener(v ->
                 startActivity(new Intent(this, SignupActivity.class)));
@@ -29,19 +30,21 @@ public class LoginActivity extends BasicActivity {
 
 
     private void  getCredentials(){
+        String userName = binding.userName.getText().toString();
         String emailTxt = binding.emailTxt.getText().toString();
         String passwordTxt = binding.passwordTxt.getText().toString();
 
         if (emailTxt == null || passwordTxt == null ){
             binding.loginBtn.setError("fill all credentials...");
         }else {
-            setupLogin(emailTxt,passwordTxt);
+            setupLogin(emailTxt,passwordTxt,userName);
         }
     }
-    private void setupLogin(String emailTxt ,String passwordTxt){
+    private void setupLogin(String emailTxt ,String passwordTxt,String userName){
         mAuth.signInWithEmailAndPassword(emailTxt,passwordTxt).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 Toast.makeText(this, "Login Successfull...", Toast.LENGTH_SHORT).show();
+                tinyDB.putString("userName",userName);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }
         });

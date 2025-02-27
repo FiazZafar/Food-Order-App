@@ -1,5 +1,6 @@
 package com.sahiwal.onlinefoodapp.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Window;
@@ -16,7 +17,13 @@ public class IntroActivity extends BasicActivity {
         setContentView(binding.getRoot());
         getWindow().setStatusBarColor(Color.parseColor("#FFE4B5"));
 
-        binding.signUpBtn.setOnClickListener(v ->{});
-        binding.loginBtn.setOnClickListener(v ->{});
+        if (mAuth.getCurrentUser() != null){
+            startActivity(new Intent(this, MainActivity.class));
+        }else {
+
+            binding.signUpBtn.setOnClickListener(v ->startActivity(new Intent(this, SignupActivity.class)));
+            binding.loginBtn.setOnClickListener(v ->startActivity(new Intent(this, LoginActivity.class)));
+
+        }
     }
 }

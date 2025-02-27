@@ -1,7 +1,6 @@
 package com.sahiwal.onlinefoodapp.activities;
 
 import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,9 +32,9 @@ import java.util.ArrayList;
 public class MainActivity extends BasicActivity {
     ActivityMainBinding binding;
 
-    RecyclerView foodRecycler,categoryRecycler;
     DatabaseReference myRef;
     Spinner timeSpinner,locationSpinner,priceSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +46,7 @@ public class MainActivity extends BasicActivity {
         locationSpinner = binding.locationSpinner;
         priceSpinner = binding.priceSpinner;
 
-
+        binding.userName.setText(tinyDB.getString("userName"));
 
 
         binding.logoutBtn.setOnClickListener(view ->{
@@ -59,28 +57,26 @@ public class MainActivity extends BasicActivity {
         }});
         binding.searchBarBtn.setOnClickListener(view -> {
             String searchedItem = binding.searchBarEdt.getText().toString().trim();
-            if (searchedItem == ""){
-                Intent intent = new Intent(MainActivity.this, FoodListByCategory.class);
+            if (searchedItem != ""){
+                Intent intent = new Intent(MainActivity.this, FoodListActivity.class);
                 intent.putExtra("searchedItem",searchedItem);
                 intent.putExtra("isSearched",true);
                 startActivity(intent);
             }
-        }
-        );
+        });
+        binding.cartBtn.setOnClickListener(view -> startActivity(new Intent(MainActivity.this,CartActivity.class)));
          initializeSpinner("Location", Location.class,locationSpinner);
         initializeSpinner("Price", Price.class,priceSpinner);
         initializeSpinner("Time", Time.class,timeSpinner);
 
         initBestFood();
         initCategory();
-        foodRecycler = new RecyclerView(this);
-        foodRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this,
-                LinearLayoutManager.HORIZONTAL,false));
+
 
     }
 
     private void initBestFood() {
-        myRef = mDatabase.getReference("Food");
+        myRef = mDatabase.getReference("Foods");
         ArrayList<Food> bestFoodList = new ArrayList<>();
         binding.foodsProgressBar.setVisibility(VISIBLE);
         Query query = myRef.orderByChild("BestFood").equalTo(true);
@@ -136,7 +132,7 @@ public class MainActivity extends BasicActivity {
     private <T> void initializeSpinner(String reference,Class<T> clazz, Spinner spinner){
         myRef = mDatabase.getReference(reference);
         ArrayList<T> arrayList = new ArrayList<>();
-        ArrayAdapter<T> adapter = new ArrayAdapter<>(this, R.layout.sp_item);
+        ArrayAdapter<T> adapter = new ArrayAdapter<>(this, R.layout.sp_item,arrayList);
         adapter.setDropDownViewResource(R.layout.sp_item);
 
         myRef.addValueEventListener(new ValueEventListener() {

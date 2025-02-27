@@ -1,10 +1,12 @@
 package com.sahiwal.onlinefoodapp.models;
 
-public class Food {
+import java.io.Serializable;
+
+public class Food implements Serializable {
     private int CategoryId;
     private String Description;
     private boolean BestFood;
-    private int id;
+    private int Id;
     private int LocationId;
     private double Price;
     private String ImagePath;
@@ -13,7 +15,7 @@ public class Food {
     private int TimeId;
     private int TimeValue;
     private String Title;
-    private int numberInCart;
+    private int NumberInCart;
 
     public  Food(){
 
@@ -43,11 +45,11 @@ public class Food {
     }
 
     public int getId() {
-        return id;
+        return Id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.Id = id;
     }
 
     public int getLocationId() {
@@ -115,11 +117,11 @@ public class Food {
     }
 
     public int getNumberInCart() {
-        return numberInCart;
+        return NumberInCart;
     }
 
     public void setNumberInCart(int numberInCart) {
-        this.numberInCart = numberInCart;
+        this.NumberInCart = numberInCart;
     }
 
     @Override

@@ -7,12 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.sahiwal.onlinefoodapp.R;
+import com.sahiwal.onlinefoodapp.activities.FoodListActivity;
 import com.sahiwal.onlinefoodapp.models.Category;
 
 import java.util.ArrayList;
@@ -38,46 +40,28 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         Category currentCategory = categoriesList.get(position);
         holder.titleTxt.setText(currentCategory.getName());
 
-        switch (position){
-            case 1:
-                holder.productImage.setBackgroundResource(R.drawable.car_1_bg);
-                break;
-            case 2:
-                holder.productImage.setBackgroundResource(R.drawable.car_2_bg);
-                break;
-            case 3:
-                holder.productImage.setBackgroundResource(R.drawable.car_3_bg);
-                break;
-            case 4:
-                holder.productImage.setBackgroundResource(R.drawable.car_4_bg);
-                break;
-            case 5:
-                holder.productImage.setBackgroundResource(R.drawable.car_5_bg);
-                break;
-            case 6:
-                holder.productImage.setBackgroundResource(R.drawable.car_6_bg);
-                break;
-            case 7:
-                holder.productImage.setBackgroundResource(R.drawable.car_7_bg);
-                break;
-            default:
-                holder.productImage.setBackgroundResource(R.drawable.car_8_bg);
-        }
+        // Set background resource dynamically if needed
+        int backgroundResourceId = context.getResources().getIdentifier(
+                "car_" + (position + 1) + "_bg", "drawable", context.getPackageName());
+        holder.productImage.setBackgroundResource(backgroundResourceId);
 
-        int drawableResourceId = context.getResources().getIdentifier(currentCategory
-                .getImagePath(),"drawable",holder.itemView.getContext().getPackageName());
-        Glide.with(context).load(drawableResourceId).into(holder.productImage);
-        Glide.with(context).load(currentCategory.getImagePath()).into(holder.productImage);
+        // Load image using Glide
+        int drawableResourceId = context.getResources().getIdentifier(
+                currentCategory.getImagePath(), "drawable", context.getPackageName());
 
-        holder.itemView.setOnClickListener(view ->
-        {
-            Intent intent = new Intent(context, FoodListByCategory.class);
-            intent.putExtra("catergoryId",currentCategory.getId());
+        // Use Glide to load the image
+        Glide.with(context)
+                .load(drawableResourceId)
+                .into(holder.productImage);
+
+        // Set click listener
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, FoodListActivity.class);
+            intent.putExtra("categoryId", currentCategory.getId());
+            intent.putExtra("categoryName", currentCategory.getName());
             context.startActivity(intent);
-
         });
     }
-
     @Override
     public int getItemCount() {
         return categoriesList.size();

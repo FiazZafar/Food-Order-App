@@ -2,7 +2,7 @@ package com.sahiwal.onlinefoodapp.models;
 
 public class Location {
     private int Id;
-    private String Loc;
+    private String loc;
 
     public Location() {
     }
@@ -12,7 +12,7 @@ public class Location {
 
     @Override
     public String toString() {
-        return Loc;
+        return loc;
     }
 
     public void setId(int id) {
@@ -20,11 +20,11 @@ public class Location {
     }
 
     public String getLoc() {
-        return Loc;
+        return loc;
     }
 
     public void setLoc(String loc) {
-        Loc = loc;
+        this.loc = loc;
     }
 
 }
