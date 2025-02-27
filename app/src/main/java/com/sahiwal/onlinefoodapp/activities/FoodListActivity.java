@@ -49,16 +49,20 @@ public class FoodListActivity extends BasicActivity {
         Intent intent = getIntent();
         categoryId = intent.getIntExtra("catergoryId",-1);
         searchText = intent.getStringExtra("searchedItem");
+        isSearch = intent.getBooleanExtra("isSearched",false);
     }
     private void initFoodList() {
 
         DatabaseReference myRef = mDatabase.getReference("Foods");
         ArrayList<Food> myList = new ArrayList<>();
         binding.progressBar.setVisibility(VISIBLE);
+        Query query;
+        if (isSearch){
+                query = myRef.orderByChild("Title").equalTo(searchText).startAt(searchText).endAt(searchText);
+        }else {
+             query = myRef.orderByChild("CategoryId").equalTo(categoryId);
+        }
 
-        if ()
-
-        Query query = myRef.orderByChild("CategoryId").equalTo(categoryId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

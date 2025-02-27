@@ -62,7 +62,7 @@ public class MainActivity extends BasicActivity {
             if (searchedItem == ""){
                 Intent intent = new Intent(MainActivity.this, FoodListByCategory.class);
                 intent.putExtra("searchedItem",searchedItem);
-                intent.putExtra("")
+                intent.putExtra("isSearched",true);
                 startActivity(intent);
             }
         }

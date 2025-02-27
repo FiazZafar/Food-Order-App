@@ -1,6 +1,7 @@
 package com.sahiwal.onlinefoodapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.sahiwal.onlinefoodapp.R;
+import com.sahiwal.onlinefoodapp.activities.DetailActivity;
 import com.sahiwal.onlinefoodapp.activities.FoodListActivity;
 import com.sahiwal.onlinefoodapp.models.Food;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class FoodListByCategory extends RecyclerView.Adapter<FoodListByCategory.ViewHolder>{
@@ -36,14 +39,19 @@ public class FoodListByCategory extends RecyclerView.Adapter<FoodListByCategory.
     public void onBindViewHolder(@NonNull FoodListByCategory.ViewHolder holder, int position) {
        Food myFood = foodList.get(position);
        holder.productName.setText(myFood.getTitle());
-       holder.productTime.setText(myFood.getTimeValue());
-       holder.productPrice.setText("$ " + String.valueOf(myFood.getPrice()));
-       holder.productRating.setText(String.valueOf(myFood.getStar()));
+       holder.productTime.setText(myFood.getTimeValue() + "mins");
+       holder.productPrice.setText("$ " + myFood.getPrice());
+       holder.productRating.setText(myFood.getStar() + "ratings");
        Glide.with(context).load(myFood.getImagePath()).into(holder.productImage);
 
 
-
-    }
+       holder.itemView.setOnClickListener(view ->{
+           Intent intent = new Intent(context, DetailActivity.class);
+           intent.putExtra("object" , (Serializable) myFood);
+           context.startActivity(intent);
+       }
+    );
+}
 
     @Override
     public int getItemCount() {
