@@ -17,8 +17,18 @@ public class Food implements Serializable {
     private String Title;
     private int NumberInCart;
 
+    private Boolean isFav;
+
     public  Food(){
 
+    }
+
+    public Boolean getFav() {
+        return isFav;
+    }
+
+    public void setFav(Boolean fav) {
+        isFav = fav;
     }
     public int getCategoryId() {
         return CategoryId;

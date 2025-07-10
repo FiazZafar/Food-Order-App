@@ -19,25 +19,6 @@ public class ManagmentCart {
         this.tinyDB=new TinyDB(context);
     }
 
-    public void insertFood(Food item) {
-        ArrayList<Food> listpop = getListCart();
-        boolean existAlready = false;
-        int n = 0;
-        for (int i = 0; i < listpop.size(); i++) {
-            if (listpop.get(i).getTitle().equals(item.getTitle())) {
-                existAlready = true;
-                n = i;
-                break;
-            }
-        }
-        if(existAlready){
-            listpop.get(n).setNumberInCart(item.getNumberInCart());
-        }else{
-            listpop.add(item);
-        }
-        tinyDB.putListObject("CartList",listpop);
-        Toast.makeText(context, "Added to your Cart", Toast.LENGTH_SHORT).show();
-    }
 
     public ArrayList<Food> getListCart() {
         return tinyDB.getListObject("CartList");

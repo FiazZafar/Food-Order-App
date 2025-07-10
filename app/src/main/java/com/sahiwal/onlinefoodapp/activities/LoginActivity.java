@@ -1,25 +1,26 @@
 package com.sahiwal.onlinefoodapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends BasicActivity {
     ActivityLoginBinding binding;
+
+    SharedPreferences preferences ;
+    SharedPreferences.Editor editor ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        preferences = getSharedPreferences("UsersProfilePref",MODE_PRIVATE);
+        editor = preferences.edit();
+
+
         binding.loginBtn.setOnClickListener(v -> getCredentials());
         binding.signUpBtn.setOnClickListener(v ->
                 startActivity(new Intent(this, SignupActivity.class)));
@@ -27,7 +28,6 @@ public class LoginActivity extends BasicActivity {
         binding.twitterBtn.setOnClickListener(v -> signUpWithTwitter());
         binding.facebookBtn.setOnClickListener(v -> signUpWithFacebook());
     }
-
 
     private void  getCredentials(){
         String userName = binding.userName.getText().toString();
@@ -44,7 +44,8 @@ public class LoginActivity extends BasicActivity {
         mAuth.signInWithEmailAndPassword(emailTxt,passwordTxt).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 Toast.makeText(this, "Login Successfull...", Toast.LENGTH_SHORT).show();
-                tinyDB.putString("userName",userName);
+                editor.putString("userName",userName);
+                editor.putString("userEmail",emailTxt);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }
         });

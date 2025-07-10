@@ -1,6 +1,7 @@
 package com.sahiwal.onlinefoodapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -20,11 +21,17 @@ import com.sahiwal.onlinefoodapp.helper.TinyDB;
 
 public class SignupActivity extends BasicActivity {
     ActivitySignupBinding binding;
+    SharedPreferences preferences ;
+    SharedPreferences.Editor editor ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        preferences = getSharedPreferences("UsersProfilePref",MODE_PRIVATE);
+        editor = preferences.edit();
+
 
         binding.signUpBtn.setOnClickListener(v ->setElements());
         binding.loginBtn.setOnClickListener(v -> startActivity(new Intent(this,LoginActivity.class)));
@@ -32,7 +39,6 @@ public class SignupActivity extends BasicActivity {
         binding.twitterBtn.setOnClickListener(v -> signUpWithTwitter());
         binding.facebookBtn.setOnClickListener(v -> signUpWithFacebook());
     }
-
     private void setElements() {
       String emailTxt =  binding.emailTxt.getText().toString();
       String userName =  binding.nameTxt.getText().toString();
@@ -54,9 +60,10 @@ public class SignupActivity extends BasicActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         Toast.makeText(SignupActivity.this, "Login Succeessfull...", Toast.LENGTH_SHORT).show();
-                        tinyDB.putString("userName",userName);
+                        editor.putString("userName",userName);
+                        editor.putString("userEmail",emailTxt);
+                        editor.apply();
                         startActivity(new Intent(SignupActivity.this, MainActivity.class));
-
                     }else {
                         Toast.makeText(this, "Login failed...", Toast.LENGTH_SHORT).show();
                     }

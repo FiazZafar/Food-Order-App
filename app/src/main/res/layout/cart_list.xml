@@ -3,10 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="110dp"
-    android:layout_marginStart="4dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginEnd="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     app:cardElevation="3dp"
     app:cardCornerRadius="15dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -20,9 +18,9 @@
         <ImageView
             android:id="@+id/productImageCart"
             android:layout_width="123dp"
-            android:layout_height="96dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
             android:layout_marginStart="8dp"
-            android:scaleType="fitXY"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,22 +31,26 @@
             android:id="@+id/productNameCart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:text="Title"
             android:textColor="@color/blue_gray"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/productImageCart"
-            app:layout_constraintTop_toTopOf="@+id/productImageCart" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/productPriceCart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="$0"
             android:textColor="@color/blue_gray"
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@+id/productNameCart"
             app:layout_constraintTop_toBottomOf="@+id/productNameCart" />
 
@@ -59,20 +61,20 @@
             android:layout_marginEnd="8dp"
             android:text="$0"
             android:textColor="@color/red"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/constraintLayout2"
             app:layout_constraintTop_toTopOf="@+id/constraintLayout2" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
-
             app:layout_constraintBottom_toBottomOf="@+id/productImageCart"
+            app:layout_constraintEnd_toStartOf="@+id/productTotalPriceCart"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/productPriceCart"
             app:layout_constraintTop_toBottomOf="@+id/productPriceCart">
 
@@ -90,13 +92,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <TextView
                 android:id="@+id/totalQuantity"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:gravity="center"
-                android:text="0"
+                android:text="1"
                 android:textColor="@color/blue_gray"
                 android:textSize="16sp"
                 android:textStyle="bold"

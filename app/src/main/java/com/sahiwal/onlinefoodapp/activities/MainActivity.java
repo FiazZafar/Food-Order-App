@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -35,18 +36,30 @@ public class MainActivity extends BasicActivity {
     DatabaseReference myRef;
     Spinner timeSpinner,locationSpinner,priceSpinner;
 
+    SharedPreferences pref ;
+    SharedPreferences.Editor editor ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    binding = ActivityMainBinding.inflate(getLayoutInflater());
-    setContentView(binding.getRoot());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         timeSpinner = binding.deliveryTimeSpinner;
         locationSpinner = binding.locationSpinner;
         priceSpinner = binding.priceSpinner;
 
-        binding.userName.setText(tinyDB.getString("userName"));
+        pref = getSharedPreferences("UsersProfilePref",MODE_PRIVATE);
+        editor = pref.edit();
+
+        String userName = pref.getString("userName",null);
+        if (userName != null){
+            binding.userName.setText(userName);
+        }
+        binding.profilePic.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this,ProfileScreen.class));
+        });
 
 
         binding.logoutBtn.setOnClickListener(view ->{
@@ -57,21 +70,23 @@ public class MainActivity extends BasicActivity {
         }});
         binding.searchBarBtn.setOnClickListener(view -> {
             String searchedItem = binding.searchBarEdt.getText().toString().trim();
-            if (searchedItem != ""){
+            if (!searchedItem.equals("")){
                 Intent intent = new Intent(MainActivity.this, FoodListActivity.class);
                 intent.putExtra("searchedItem",searchedItem);
                 intent.putExtra("isSearched",true);
                 startActivity(intent);
             }
         });
-        binding.cartBtn.setOnClickListener(view -> startActivity(new Intent(MainActivity.this,CartActivity.class)));
-         initializeSpinner("Location", Location.class,locationSpinner);
+        binding.cartBtn.setOnClickListener(view ->{
+            startActivity(new Intent(MainActivity.this,CartActivity.class));
+        });
+
+        initializeSpinner("Location", Location.class,locationSpinner);
         initializeSpinner("Price", Price.class,priceSpinner);
         initializeSpinner("Time", Time.class,timeSpinner);
 
         initBestFood();
         initCategory();
-
 
     }
 

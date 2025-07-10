@@ -1,8 +1,8 @@
 package com.sahiwal.onlinefoodapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.RoundedCorner;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,6 +19,7 @@ import com.sahiwal.onlinefoodapp.helper.ManagmentCart;
 import com.sahiwal.onlinefoodapp.interfaces.ChangeNumberItemsListener;
 import com.sahiwal.onlinefoodapp.models.Food;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
@@ -26,12 +27,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     private ArrayList<Food> foodArrayList;
     private Context context;
     private int num;
-    private ManagmentCart cart;
     ChangeNumberItemsListener changeNumberItemsListener;
-    public CartAdapter(ArrayList<Food> food,ManagmentCart cart,ChangeNumberItemsListener changeNumberItemsListener){
+    ManagmentCart myCart;
+    public CartAdapter(ArrayList<Food> food,ManagmentCart mCart,ChangeNumberItemsListener changeNumberItemsListener){
         this.foodArrayList = food;
-        this.cart = cart;
         this.changeNumberItemsListener = changeNumberItemsListener;
+        this.myCart = mCart;
     }
     @NonNull
     @Override
@@ -41,39 +42,36 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.cart_list,parent,false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CartAdapter.ViewHolder holder, int position) {
         Food myFood = foodArrayList.get(position);
         num = myFood.getNumberInCart();
         holder.title.setText(myFood.getTitle());
-        holder.totalPrice.setText("$" + myFood.getNumberInCart() * myFood.getPrice());
-        holder.price.setText(num + "* $ " +(num * myFood.getPrice()));
+        holder.price.setText("$ " + myFood.getPrice());
         holder.quantity.setText(String.valueOf(myFood.getNumberInCart()));
+        DecimalFormat format = new DecimalFormat("0.00");
+        holder.totalPrice.setText("$ " + format.format(myFood.getNumberInCart() * myFood.getPrice()));
+
         Glide.with(context)
                 .load(myFood.getImagePath())
-                .transform(new CenterCrop(),new RoundedCorners(38)).into(holder.image);
+                .transform(new CenterCrop(),new RoundedCorners(38))
+                .into(holder.image);
 
         holder.plusBtn.setOnClickListener(view -> {
-            cart.plusNumberItem(foodArrayList, position, new ChangeNumberItemsListener() {
-                @Override
-                public void change() {
-                    notifyDataSetChanged();
-                    changeNumberItemsListener.change();
-                }
-            });
+            num++;
+            notifyDataSetChanged();
+            myCart.plusNumberItem(foodArrayList, position, () -> changeNumberItemsListener.change());
+
         });
         holder.minusBtn.setOnClickListener(view ->{
-            if (num>1){
-                cart.minusNumberItem(foodArrayList, position, new ChangeNumberItemsListener() {
-                    @Override
-                    public void change() {
-                        notifyDataSetChanged();
-                        changeNumberItemsListener.change();
-                    }
-                });
-            }
+            if (num > 1) {
+                num--;
 
-       });
+                notifyDataSetChanged();
+                myCart.minusNumberItem(foodArrayList, position, () -> changeNumberItemsListener.change());
+            }
+        });
     }
 
     @Override
