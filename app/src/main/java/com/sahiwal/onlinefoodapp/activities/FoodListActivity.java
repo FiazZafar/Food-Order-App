@@ -33,7 +33,7 @@ public class FoodListActivity extends BasicActivity {
 
     ActivityFoodListBinding binding;
     int categoryId;
-    boolean isSearch;
+    boolean isSearch,isBestFood;
     String searchText,categoryName;
 
     @Override
@@ -53,6 +53,7 @@ public class FoodListActivity extends BasicActivity {
         categoryName = intent.getStringExtra("categoryName");
         searchText = intent.getStringExtra("searchedItem");
         isSearch = intent.getBooleanExtra("isSearched",false);
+        isBestFood = intent.getBooleanExtra("isBestFood",false);
     }
     private void initFoodList() {
 
@@ -72,6 +73,10 @@ public class FoodListActivity extends BasicActivity {
                         if (food != null) {
                             if (isSearch) {
                                 if (food.getTitle().toLowerCase().contains(searchText)) {
+                                    myList.add(food);
+                                }
+                            } else if (isBestFood) {
+                                if (food.isBestFood()){
                                     myList.add(food);
                                 }
                             } else {

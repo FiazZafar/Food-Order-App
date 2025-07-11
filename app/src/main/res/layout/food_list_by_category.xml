@@ -5,7 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="15dp"
     android:layout_margin="8dp"
-    app:cardCornerRadius="15dp">
+    app:cardCornerRadius="15dp"
+    app:cardBackgroundColor="@color/white"
+    >
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -50,6 +52,7 @@
             android:layout_marginTop="8dp"
             android:drawableRight="@drawable/time"
             android:drawablePadding="4sp"
+            android:textColor="@color/textColor"
             android:text="Title"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/productNameFc"
@@ -77,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="rating"
+            android:textColor="@color/textColor"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/productPriceFc"
             app:layout_constraintEnd_toStartOf="@+id/imageView4"

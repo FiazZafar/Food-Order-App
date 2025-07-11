@@ -82,6 +82,11 @@ public class MainActivity extends BasicActivity {
                 startActivity(intent);
             }
         });
+        binding.viewAllBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, FoodListActivity.class);
+            intent.putExtra("isBestFood",true);
+            startActivity(intent);
+        });
         binding.cartBtn.setOnClickListener(view ->{
             startActivity(new Intent(MainActivity.this,CartActivity.class));
         });
