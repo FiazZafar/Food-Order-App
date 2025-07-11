@@ -5,6 +5,8 @@ import static android.view.View.VISIBLE;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -40,7 +42,7 @@ public class FoodListActivity extends BasicActivity {
 
         binding = ActivityFoodListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.backBtn.setOnClickListener(view -> finish());
+        binding.backBtn.setOnClickListener(view -> onBackPressed());
 
        getIntents();
         initFoodList();
@@ -56,45 +58,56 @@ public class FoodListActivity extends BasicActivity {
 
         DatabaseReference myRef = mDatabase.getReference("Foods");
         ArrayList<Food> myList = new ArrayList<>();
+
         binding.progressBar.setVisibility(VISIBLE);
-        Query query;
-        if (isSearch){
-                query = myRef.orderByChild("Title").equalTo(searchText);
-                binding.listTitle.setText(searchText);
-        }else {
-             query = myRef.orderByChild("CategoryId").equalTo(categoryId);
-            binding.listTitle.setText(categoryName);
 
-        }
 
-        query.addValueEventListener(new ValueEventListener() {
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 myList.clear();
-                if (snapshot.exists()){
-                    for (DataSnapshot snapshot1 : snapshot.getChildren()){
-                        myList.add(snapshot1.getValue(Food.class));
-                    }
-                    if (myList.size() > 0){
-                        binding.foodListRecycler.setLayoutManager(new GridLayoutManager(FoodListActivity.this,2));
-                        binding.foodListRecycler.setAdapter(new FoodListByCategory(myList));
-                    }else {
-                        try {
-                            binding.progressBar.wait(5000);
-                            binding.progressBar.setVisibility(GONE);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                if (snapshot.exists()) {
+                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                        Food food = snapshot1.getValue(Food.class);
+                        if (food != null) {
+                            if (isSearch) {
+                                if (food.getTitle().toLowerCase().contains(searchText)) {
+                                    myList.add(food);
+                                }
+                            } else {
+                                if (categoryId == food.getCategoryId()) {
+                                    myList.add(food);
+                                }
+                            }
                         }
                     }
-                    binding.progressBar.setVisibility(GONE);
+                        binding.listTitle.setText(isSearch ? searchText : categoryName);
+                        if (!myList.isEmpty()) {
+                            binding.foodListRecycler.setLayoutManager(new GridLayoutManager(FoodListActivity.this, 2));
+                            binding.foodListRecycler.setAdapter(new FoodListByCategory(myList));
+                        } else {
 
+                            Toast.makeText(FoodListActivity.this, "No items found", Toast.LENGTH_SHORT).show();
+                        }
+                        binding.progressBar.setVisibility(GONE);
+                }else {
+                    Toast.makeText(FoodListActivity.this, "No data available", Toast.LENGTH_SHORT).show();
                 }
+                binding.progressBar.setVisibility(GONE);
+
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                binding.progressBar.setVisibility(View.GONE);
+                Toast.makeText(FoodListActivity.this, "Failed to load data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

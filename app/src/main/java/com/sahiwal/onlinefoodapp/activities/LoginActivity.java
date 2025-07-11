@@ -3,7 +3,10 @@ package com.sahiwal.onlinefoodapp.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.Toast;
+
+import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends BasicActivity {
@@ -27,6 +30,25 @@ public class LoginActivity extends BasicActivity {
         binding.googleBtn.setOnClickListener(v -> signUpWithGoogle());
         binding.twitterBtn.setOnClickListener(v -> signUpWithTwitter());
         binding.facebookBtn.setOnClickListener(v -> signUpWithFacebook());
+
+        binding.eyeVisibleconfirmBTn.setOnClickListener(view -> {
+            if (binding.passwordTxt.getInputType() == (InputType.TYPE_CLASS_TEXT
+                    | InputType.TYPE_TEXT_VARIATION_PASSWORD)){
+                if (!binding.passwordTxt.getText().toString().equals("")){
+                    binding.passwordTxt.setInputType(InputType.TYPE_CLASS_TEXT
+                            |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    binding.eyeVisibleconfirmBTn.setImageResource(R.drawable.visibility_off_24px);
+                }
+            }else {
+                if (!binding.passwordTxt.getText().toString().equals("")){
+                    binding.passwordTxt.setInputType(InputType.TYPE_CLASS_TEXT|
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    binding.eyeVisibleconfirmBTn.setImageResource(R.drawable.visibility_24px);
+                }
+            }
+//            binding.confirmPasswordEdt.setSelection(binding.passwordEdt.length());
+        });
+
     }
 
     private void  getCredentials(){
@@ -46,6 +68,7 @@ public class LoginActivity extends BasicActivity {
                 Toast.makeText(this, "Login Successfull...", Toast.LENGTH_SHORT).show();
                 editor.putString("userName",userName);
                 editor.putString("userEmail",emailTxt);
+                editor.apply();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }
         });

@@ -54,7 +54,7 @@ public class CartActivity extends BasicActivity {
         if (address != null){
             binding.userAddress.setText(address);
         }
-
+        binding.backBtn.setOnClickListener(view -> onBackPressed());
         cartsMVVM.getMyCarts().observe(this,list -> {
             if (list != null){
                 myList.addAll(list);
@@ -86,8 +86,7 @@ public class CartActivity extends BasicActivity {
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
             Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
             if (updateOrderHistory()){
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+               onBackPressed();
             }
         } else if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
             Toast.makeText(this, "Payment Canceled", Toast.LENGTH_SHORT).show();
@@ -126,6 +125,7 @@ public class CartActivity extends BasicActivity {
             }}));
     }
 
+
     @SuppressLint("SetTextI18n")
     private void calculateCart(){
        double taxRate =  0.02;
@@ -153,5 +153,10 @@ public class CartActivity extends BasicActivity {
             Toast.makeText(this, "Empty List.", Toast.LENGTH_SHORT).show();
         }
         return fee;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

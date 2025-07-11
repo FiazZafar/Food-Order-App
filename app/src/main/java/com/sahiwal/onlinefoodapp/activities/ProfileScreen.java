@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.databinding.ActivityProfileScreenBinding;
 
 public class ProfileScreen extends AppCompatActivity {
@@ -33,18 +34,16 @@ public class ProfileScreen extends AppCompatActivity {
         String userEmail = pref.getString("userEmail",null);
         String userName = pref.getString("userName",null);
         String userAddress = pref.getString("Address",null);
-        Toast.makeText(this, "User Name is " + userName, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "User Name is " + userName, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "User Name is " + userName, Toast.LENGTH_SHORT).show();
         if (userName != null) binding.userName.setText(userName);
-        if (userEmail != null) binding.userName.setText(userEmail);
-        if (userImage != null && !userImage.isEmpty()) Glide.with(this).load(Uri.parse(userImage)).into(binding.userProfile);
+        if (userEmail != null) binding.userEmail.setText(userEmail);
+        if (userImage != null && !userImage.isEmpty())
+            Glide.with(this).load(Uri.parse(userImage))
+                    .error(R.drawable.account_circle_24px)
+                    .placeholder(R.drawable.account_circle_24px)
+                    .into(binding.userProfile);
         if (userAddress != null) binding.userAddress.setText(userAddress);
 
-        binding.backBtn.setOnClickListener(view -> {
-            onBackPressed();
-            finish();
-        });
+        binding.backBtn.setOnClickListener(view -> onBackPressed());
         binding.uploadProfile.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
@@ -84,5 +83,10 @@ public class ProfileScreen extends AppCompatActivity {
             editor.putString("UserImage", String.valueOf(uri));
             editor.apply();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

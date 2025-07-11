@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,10 +33,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends BasicActivity {
     ActivityMainBinding binding;
-
     DatabaseReference myRef;
     Spinner timeSpinner,locationSpinner,priceSpinner;
-
     SharedPreferences pref ;
     SharedPreferences.Editor editor ;
 
@@ -54,13 +53,19 @@ public class MainActivity extends BasicActivity {
         editor = pref.edit();
 
         String userName = pref.getString("userName",null);
+        String userImage = pref.getString("UserImage",null);
         if (userName != null){
             binding.userName.setText(userName);
+        }
+        if (userImage != null) {
+            Glide.with(this).load(userImage)
+                    .error(R.drawable.account_circle_24px)
+                    .placeholder(R.drawable.account_circle_24px)
+                    .into(binding.profilePic);
         }
         binding.profilePic.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this,ProfileScreen.class));
         });
-
 
         binding.logoutBtn.setOnClickListener(view ->{
         if (mAuth.getCurrentUser() != null) {

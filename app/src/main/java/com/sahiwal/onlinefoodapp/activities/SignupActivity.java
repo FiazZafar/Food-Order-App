@@ -3,6 +3,7 @@ package com.sahiwal.onlinefoodapp.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -38,6 +39,43 @@ public class SignupActivity extends BasicActivity {
         binding.googleBtn.setOnClickListener(v -> signUpWithGoogle());
         binding.twitterBtn.setOnClickListener(v -> signUpWithTwitter());
         binding.facebookBtn.setOnClickListener(v -> signUpWithFacebook());
+
+        binding.eyeVisiblePasBTn.setOnClickListener(view -> {
+            if (binding.passwordTxt.getInputType() == (InputType.TYPE_CLASS_TEXT
+                    | InputType.TYPE_TEXT_VARIATION_PASSWORD)){
+                if (!binding.passwordTxt.getText().toString().equals("")){
+                    binding.passwordTxt.setInputType(InputType.TYPE_CLASS_TEXT
+                            |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    binding.eyeVisiblePasBTn.setImageResource(R.drawable.visibility_off_24px);
+                }
+            }else {
+                if (!binding.passwordTxt.getText().toString().equals("")) {
+                    binding.passwordTxt.setInputType(InputType.TYPE_CLASS_TEXT|
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    binding.eyeVisiblePasBTn.setImageResource(R.drawable.visibility_24px);
+                }
+            }
+//            binding.passwordEdt.setSelection(binding.passwordEdt.length());
+        });
+
+        binding.eyeVisibleconfirmBTn.setOnClickListener(view -> {
+            if (binding.confirmPasswordTxt.getInputType() == (InputType.TYPE_CLASS_TEXT
+                    | InputType.TYPE_TEXT_VARIATION_PASSWORD)){
+                if (!binding.confirmPasswordTxt.getText().toString().equals("")){
+                    binding.confirmPasswordTxt.setInputType(InputType.TYPE_CLASS_TEXT
+                            |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    binding.eyeVisibleconfirmBTn.setImageResource(R.drawable.visibility_off_24px);
+                }
+            }else {
+                if (!binding.confirmPasswordTxt.getText().toString().equals("")){
+                    binding.confirmPasswordTxt.setInputType(InputType.TYPE_CLASS_TEXT|
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    binding.eyeVisibleconfirmBTn.setImageResource(R.drawable.visibility_24px);
+                }
+            }
+//            binding.confirmPasswordEdt.setSelection(binding.passwordEdt.length());
+        });
+
     }
     private void setElements() {
       String emailTxt =  binding.emailTxt.getText().toString();
