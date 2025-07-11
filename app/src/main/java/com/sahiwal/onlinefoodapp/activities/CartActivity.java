@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sahiwal.onlinefoodapp.adapters.CartAdapter;
 import com.sahiwal.onlinefoodapp.databinding.ActivityCartBinding;
-import com.sahiwal.onlinefoodapp.helper.ManagmentCart;
 import com.sahiwal.onlinefoodapp.helper.OrderEnum;
 import com.sahiwal.onlinefoodapp.models.Food;
 import com.sahiwal.onlinefoodapp.models.OrderHistory;
@@ -24,11 +23,11 @@ import com.stripe.android.paymentsheet.PaymentSheet;
 import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CartActivity extends BasicActivity {
     ActivityCartBinding binding;
-    ManagmentCart myCart;
     ArrayList<Food> myList;
     String address;
     double totals;
@@ -43,7 +42,6 @@ public class CartActivity extends BasicActivity {
         cartsMVVM = new ViewModelProvider(this).get(CartsMVVM.class);
         cartsMVVM.setMyCarts();
 
-        myCart = new ManagmentCart(this);
         myList = new ArrayList<>();
         SharedPreferences preferences = getSharedPreferences("UsersProfilePref",MODE_PRIVATE);
         address = preferences.getString("Address",null);
@@ -60,6 +58,9 @@ public class CartActivity extends BasicActivity {
         cartsMVVM.getMyCarts().observe(this,list -> {
             if (list != null){
                 myList.addAll(list);
+
+                calculateCart();
+
                 initList();
             }
         });
@@ -79,7 +80,6 @@ public class CartActivity extends BasicActivity {
             }
         });
 
-        calculateCart();
         setElements();
     }
     private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
@@ -99,7 +99,8 @@ public class CartActivity extends BasicActivity {
 
     private Boolean updateOrderHistory() {
         AtomicReference<Boolean> isUpdated = new AtomicReference<>(false);
-        cartsMVVM.setOrdersInterface(new OrderHistory(myList.size(),totals,address, OrderEnum.PENDING));
+        cartsMVVM.setOrdersInterface(new OrderHistory(myList.size(),
+                totals,address, OrderEnum.PENDING));
         cartsMVVM.getOrderStatus().observe(this,onSaved -> {
             if (onSaved) {
                 isUpdated.set(onSaved);
@@ -118,16 +119,20 @@ public class CartActivity extends BasicActivity {
     }
         binding.cartRecycler.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL,false));
-        binding.cartRecycler.setAdapter(new CartAdapter(myList,myCart,() -> calculateCart()));
+        binding.cartRecycler.setAdapter(new CartAdapter(myList,onUpdatedList -> {
+            if (onUpdatedList != null) {
+                myList = new ArrayList<>(onUpdatedList);
+                calculateCart();
+            }}));
     }
 
     @SuppressLint("SetTextI18n")
     private void calculateCart(){
        double taxRate =  0.02;
        double deliveryCost =  10.0;
-        taxRate = (double) Math.round(myCart.getTotalFee() * taxRate * 100.0) /100;
-        totals  = (double) Math.round((taxRate + myCart.getTotalFee() + deliveryCost) * 100) /100;
-        double itemTotal = (double) Math.round(myCart.getTotalFee() * 100) /100;
+        taxRate = (double) Math.round(getTotalFee(myList) * taxRate * 100.0) /100;
+        totals  = (double) Math.round((taxRate + getTotalFee(myList) + deliveryCost) * 100) /100;
+        double itemTotal = (double) Math.round(getTotalFee(myList) * 100) /100;
 
        binding.subTotalAmount.setText("$" + itemTotal);
        binding.deliveryCost.setText("$" + deliveryCost);
@@ -136,5 +141,17 @@ public class CartActivity extends BasicActivity {
     }
     private void setElements() {
         binding.backBtn.setOnClickListener(view -> finish());
+    }
+
+    public Double getTotalFee(List<Food> foodList){
+        double fee=0;
+        if (!foodList.isEmpty()){
+            for (int i = 0; i < foodList.size(); i++) {
+                fee=fee+(foodList.get(i).getPrice() * foodList.get(i).getNumberInCart());
+            }
+        }else {
+            Toast.makeText(this, "Empty List.", Toast.LENGTH_SHORT).show();
+        }
+        return fee;
     }
 }

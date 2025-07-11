@@ -1,5 +1,5 @@
 package com.sahiwal.onlinefoodapp.interfaces;
 
-public interface ChangeNumberItemsListener {
-    void change();
+public interface ChangeNumberItemsListener<T> {
+    void change(T result);
 }
