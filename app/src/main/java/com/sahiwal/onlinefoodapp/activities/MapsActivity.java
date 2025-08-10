@@ -1,19 +1,22 @@
 package com.sahiwal.onlinefoodapp.activities;
 
-import static androidx.core.location.LocationManagerCompat.getCurrentLocation;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -32,96 +35,85 @@ import com.sahiwal.onlinefoodapp.databinding.ActivityMapsBinding;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private FusedLocationProviderClient locationProviderClient;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
-    private double lat,lng;
-    SharedPreferences.Editor editor;
-    private boolean isMapReady = false;
+    private double lat, lng;
+    private SharedPreferences.Editor editor;
     private Marker selectedMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        editor = getSharedPreferences("UsersProfilePref" , MODE_PRIVATE).edit();
+        editor = getSharedPreferences("UsersProfilePref", MODE_PRIVATE).edit();
 
-        Intent intent = getIntent();
-        Boolean addressScreen = intent.getBooleanExtra("AddressScreen",false);
+        boolean addressScreen = getIntent().getBooleanExtra("AddressScreen", false);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         binding.locationSelectBtn.setOnClickListener(view -> {
-            if (addressScreen){
-                startActivity(new Intent(MapsActivity.this, ProfileScreen.class));
-                finish();
-            }else {
-                startActivity(new Intent(MapsActivity.this, CartActivity.class));
-                finish();
-            }
+            startActivity(new Intent(
+                    MapsActivity.this,
+                    addressScreen ? ProfileScreen.class : CartActivity.class
+            ));
+            finish();
         });
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }else {
-            getCurrentLocation();
-        }
-
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1 && grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getCurrentLocation();
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
 
+        // Enable blue dot assuming permissions are granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
         }
+
+        getCurrentLocationAndZoom();
+
+        mMap.setOnMapClickListener(latLng -> {
+            updateMarker(latLng);
+            saveAddress(latLng.latitude, latLng.longitude);
+        });
     }
 
-    private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
+    private void getCurrentLocationAndZoom() {
         locationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
-                lat = location.getLatitude();
-                lng = location.getLongitude();
-
-                if (isMapReady) {
-                    LatLng latLng = new LatLng(lat, lng);
-                    updateMarker(latLng);
-                }
-                getCurrentAddress(lat,lng);
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                updateMarker(latLng);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f));
+                saveAddress(location.getLatitude(), location.getLongitude());
             }
         });
     }
 
-    private void getCurrentAddress(double lat, double lng) {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+    private void updateMarker(LatLng latLng) {
+        if (selectedMarker != null) selectedMarker.remove();
 
+        selectedMarker = mMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title("Selected Location"));
+
+        lat = latLng.latitude;
+        lng = latLng.longitude;
+    }
+
+    private void saveAddress(double lat, double lng) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
-                String fullAddress = address.getAddressLine(0);
-
-                editor.putString("Address", fullAddress);
+                editor.putString("Address", address.getAddressLine(0));
                 editor.putString("Latitude", String.valueOf(lat));
                 editor.putString("Longitude", String.valueOf(lng));
                 editor.apply();
@@ -130,39 +122,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
     }
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        isMapReady = true;
-
-        // Show current location if already available
-        if (lat != 0 && lng != 0) {
-            updateMarker(new LatLng(lat, lng));
-        }
-
-        // Allow user to tap and select new location
-        mMap.setOnMapClickListener(latLng -> {
-            updateMarker(latLng);
-            getCurrentAddress(latLng.latitude, latLng.longitude);
-        });
-    }
-
-    private void updateMarker(LatLng latLng) {
-        if (selectedMarker != null) {
-            selectedMarker.remove();
-        }
-
-        selectedMarker = mMap.addMarker(new MarkerOptions()
-                .position(latLng)
-                .title("Selected Location"));
-
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f));
-
-        // Also update lat/lng for internal use
-        lat = latLng.latitude;
-        lng = latLng.longitude;
-    }
-
 }

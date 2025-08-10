@@ -1,8 +1,15 @@
 package com.sahiwal.onlinefoodapp.activities;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.sahiwal.onlinefoodapp.R;
@@ -21,16 +28,6 @@ public class BasicActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         tinyDB = new TinyDB(this);
-    }
-
-    public void signUpWithGoogle() {
-    }
-    public void signUpWithTwitter() {
-
-    }
-
-    public void signUpWithFacebook() {
-
     }
 
 }

@@ -1,5 +1,7 @@
 package com.sahiwal.onlinefoodapp.activities;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +15,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,13 +37,8 @@ public class SignupActivity extends BasicActivity {
 
         preferences = getSharedPreferences("UsersProfilePref",MODE_PRIVATE);
         editor = preferences.edit();
-
-
         binding.signUpBtn.setOnClickListener(v ->setElements());
         binding.loginBtn.setOnClickListener(v -> startActivity(new Intent(this,LoginActivity.class)));
-        binding.googleBtn.setOnClickListener(v -> signUpWithGoogle());
-        binding.twitterBtn.setOnClickListener(v -> signUpWithTwitter());
-        binding.facebookBtn.setOnClickListener(v -> signUpWithFacebook());
 
         binding.eyeVisiblePasBTn.setOnClickListener(view -> {
             if (binding.passwordTxt.getInputType() == (InputType.TYPE_CLASS_TEXT
@@ -77,6 +77,7 @@ public class SignupActivity extends BasicActivity {
         });
 
     }
+
     private void setElements() {
       String emailTxt =  binding.emailTxt.getText().toString();
       String userName =  binding.nameTxt.getText().toString();

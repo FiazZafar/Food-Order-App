@@ -59,8 +59,8 @@ public class MainActivity extends BasicActivity {
         }
         if (userImage != null) {
             Glide.with(this).load(userImage)
-                    .error(R.drawable.account_circle_24px)
-                    .placeholder(R.drawable.account_circle_24px)
+                    .error(R.drawable.profile_pic)
+                    .placeholder(R.drawable.profile_pic)
                     .into(binding.profilePic);
         }
         binding.profilePic.setOnClickListener(view -> {

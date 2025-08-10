@@ -27,9 +27,6 @@ public class LoginActivity extends BasicActivity {
         binding.loginBtn.setOnClickListener(v -> getCredentials());
         binding.signUpBtn.setOnClickListener(v ->
                 startActivity(new Intent(this, SignupActivity.class)));
-        binding.googleBtn.setOnClickListener(v -> signUpWithGoogle());
-        binding.twitterBtn.setOnClickListener(v -> signUpWithTwitter());
-        binding.facebookBtn.setOnClickListener(v -> signUpWithFacebook());
 
         binding.eyeVisibleconfirmBTn.setOnClickListener(view -> {
             if (binding.passwordTxt.getInputType() == (InputType.TYPE_CLASS_TEXT

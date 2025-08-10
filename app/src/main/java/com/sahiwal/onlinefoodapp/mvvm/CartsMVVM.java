@@ -47,7 +47,9 @@ public class CartsMVVM extends ViewModel {
         retrofitClient.callPayment(String.valueOf(amount), new PaymentCallback() {
             @Override
             public void onSuccess(String clientSecret) {
-                if (clientSecret != null) presentPaymentSheet(clientSecret,paymentSheet);
+                if (clientSecret != null)
+                    presentPaymentSheet(clientSecret,paymentSheet);
+
             }
 
 
@@ -61,6 +63,7 @@ public class CartsMVVM extends ViewModel {
     private void presentPaymentSheet(String clientSecret,PaymentSheet paymentSheet) {
         PaymentSheet.Configuration myConfig = new PaymentSheet.Configuration("Food App");
         paymentSheet.presentWithPaymentIntent(clientSecret,myConfig);
+        paymentMethod.postValue(false);
     }
     public MutableLiveData<List<Food>> getMyCarts() {
         return myCarts;

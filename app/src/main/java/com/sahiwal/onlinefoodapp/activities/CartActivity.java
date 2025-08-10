@@ -3,12 +3,20 @@ package com.sahiwal.onlinefoodapp.activities;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -54,7 +62,7 @@ public class CartActivity extends BasicActivity {
         if (address != null){
             binding.userAddress.setText(address);
         }
-        binding.backBtn.setOnClickListener(view -> onBackPressed());
+        binding.backBtn.setOnClickListener(view -> finish());
         cartsMVVM.getMyCarts().observe(this,list -> {
             if (list != null){
                 myList.addAll(list);
@@ -64,9 +72,16 @@ public class CartActivity extends BasicActivity {
                 initList();
             }
         });
+
         binding.addAddressBtn.setOnClickListener(view -> {
-            startActivity(new Intent(CartActivity.this,MapsActivity.class));
-            finish();
+            mapSettings();
+        });
+        cartsMVVM.getPaymentMethod().observe(this,onMethod -> {
+            if (onMethod) {
+                Toast.makeText(this, "Select Payment Detail..", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Payment Method is on Backend server which is not accessible.", Toast.LENGTH_SHORT).show();
+            }
         });
         binding.placeOrderBtn.setOnClickListener(view ->{
             if (totals > 0){
@@ -82,6 +97,46 @@ public class CartActivity extends BasicActivity {
 
         setElements();
     }
+
+    private void mapSettings() {
+            if (checkLocationPermission() && isGpsEnabled()) {
+                startActivity(new Intent(CartActivity.this, MapsActivity.class));
+                finish();
+            } else {
+                requestLocationPermission(); // If not granted, request
+            }
+    }
+    private boolean checkLocationPermission() {
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    }
+
+    private boolean isGpsEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1 && grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            if (isGpsEnabled()) {
+                startActivity(new Intent(CartActivity.this, MapsActivity.class));
+            } else {
+                Toast.makeText(this, "Please enable GPS", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        }
+    }
+
+
     private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
             Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
