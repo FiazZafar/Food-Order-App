@@ -204,8 +204,6 @@ public class CartActivity extends BasicActivity {
             for (int i = 0; i < foodList.size(); i++) {
                 fee=fee+(foodList.get(i).getPrice() * foodList.get(i).getNumberInCart());
             }
-        }else {
-            Toast.makeText(this, "Empty List.", Toast.LENGTH_SHORT).show();
         }
         return fee;
     }

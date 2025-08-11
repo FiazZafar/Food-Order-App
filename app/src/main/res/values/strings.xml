@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Online Food App</string>
+    <string name="app_name">ZaikaHub</string>
     <string name="lorem34">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non libero ut nunc faucibus convallis. Integer luctus, mauris at hendrerit fringilla, lectus eros viverra risus, ac fermentum ex sapien.</string>
     <string name="title_activity_maps">MapsActivity</string>
 </resources>
