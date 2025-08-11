@@ -119,7 +119,7 @@
                     android:layout_gravity="end|center"
                     android:paddingEnd="16dp"
                     android:paddingStart="4dp"
-                    android:id="@+id/eyeVisibleconfirmBTn"
+                    android:id="@+id/eyeVisiblePasBTn"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
             <LinearLayout
@@ -158,7 +158,8 @@
                     android:layout_gravity="end|center"
                     android:paddingEnd="16dp"
                     android:paddingStart="4dp"
-                    android:id="@+id/eyeVisiblePasBTn"
+
+                    android:id="@+id/eyeVisibleconfirmBTn"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
             <androidx.appcompat.widget.AppCompatButton
