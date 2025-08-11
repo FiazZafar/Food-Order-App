@@ -3,15 +3,10 @@ package com.sahiwal.onlinefoodapp.activities;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.adapters.FavFoodAdapter;
 import com.sahiwal.onlinefoodapp.databinding.ActivityFavoriteScreenBinding;
 import com.sahiwal.onlinefoodapp.models.Food;
@@ -37,13 +32,23 @@ public class FavoriteScreen extends AppCompatActivity {
         favFoodAdapter = new FavFoodAdapter(myFood,this);
 
         binding.progressBar.setVisibility(View.VISIBLE);
+        binding.noResultFound.setVisibility(View.GONE);
+        binding.favListRecycler.setVisibility(View.GONE);
 
         binding.favListRecycler.setLayoutManager(new GridLayoutManager(this,2));
         binding.favListRecycler.setAdapter(favFoodAdapter);
+        binding.backBtn.setOnClickListener(view -> onBackPressed());
         favMVVM.getFavItem().observe(this,onList -> {
             binding.progressBar.setVisibility(View.GONE);
-            if(onList != null)
+            if(onList != null && !onList.isEmpty()) {
+                binding.noResultFound.setVisibility(View.GONE);
+                binding.favListRecycler.setVisibility(View.VISIBLE);
                 favFoodAdapter.updateList(onList);
+            }
+            else{
+                binding.noResultFound.setVisibility(View.VISIBLE);
+                binding.favListRecycler.setVisibility(View.GONE);
+            }
         });
     }
 }

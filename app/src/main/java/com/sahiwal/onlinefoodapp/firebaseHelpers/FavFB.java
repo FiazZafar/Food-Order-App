@@ -65,11 +65,14 @@ public class FavFB implements CartsInterface {
                         }
                     }
                     cartList.onComplete(myList);
+                }else {
+                    cartList.onComplete(myList);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                cartList.onComplete(myList);
 
             }
         });

@@ -32,13 +32,23 @@ public class OrdersActivity extends AppCompatActivity {
         orderMVVM.setMyOrders();
 
         binding.orderListRecycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.backBtn.setOnClickListener(view -> onBackPressed());
 
         binding.listTitle.setText("Order's History");
 
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.noResultFound.setVisibility(View.GONE);
+        binding.orderListRecycler.setVisibility(View.GONE);
+
         orderMVVM.getMyOrders().observe(this,orderList -> {
-            if (orderList != null){
-                binding.progressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
+            if (orderList != null && !orderList.isEmpty()){
+                binding.orderListRecycler.setVisibility(View.VISIBLE);
+                binding.noResultFound.setVisibility(View.GONE);
                 binding.orderListRecycler.setAdapter(new OrderAdapter(orderList));
+            }else {
+                binding.noResultFound.setVisibility(View.VISIBLE);
+                binding.orderListRecycler.setVisibility(View.GONE);
             }
         });
 

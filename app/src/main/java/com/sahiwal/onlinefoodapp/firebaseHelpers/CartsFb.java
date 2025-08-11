@@ -68,17 +68,21 @@ public class CartsFb implements CartsInterface{
         cartRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                    Food foodItem = itemSnapshot.getValue(Food.class);
-                    if (foodItem != null) {
-                        list.add(foodItem);
+                if (snapshot.exists()){
+                    for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                        Food foodItem = itemSnapshot.getValue(Food.class);
+                        if (foodItem != null) {
+                            list.add(foodItem);
+                        }
                     }
+                    cartList.onComplete(list);
+                }else{
+                    cartList.onComplete(list);
                 }
-                cartList.onComplete(list);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                cartList.onComplete(new ArrayList<>());
+                cartList.onComplete(list);
             }
         });
     }

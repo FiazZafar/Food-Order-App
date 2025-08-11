@@ -40,12 +40,14 @@ public class OrdersFB implements OrdersInterface {
                         if (myOrder != null) orderHistoryList.add(myOrder);
                     }
                     onOrders.onComplete(orderHistoryList);
+                }else {
+                    onOrders.onComplete(orderHistoryList);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                onOrders.onComplete(orderHistoryList);
             }
         });
     }

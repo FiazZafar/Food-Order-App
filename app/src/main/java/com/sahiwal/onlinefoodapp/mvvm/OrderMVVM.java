@@ -8,6 +8,7 @@ import com.sahiwal.onlinefoodapp.FbInterfaces.OrdersInterface;
 import com.sahiwal.onlinefoodapp.firebaseHelpers.OrdersFB;
 import com.sahiwal.onlinefoodapp.models.OrderHistory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderMVVM extends ViewModel {
@@ -22,6 +23,7 @@ public class OrderMVVM extends ViewModel {
         String userId = FirebaseAuth.getInstance().getUid();
         ordersInterface.fetchAllOrders(userId,onOrders -> {
             if (onOrders != null) myOrders.setValue(onOrders);
+            else myOrders.postValue(new ArrayList<>());
         });
     }
 }
