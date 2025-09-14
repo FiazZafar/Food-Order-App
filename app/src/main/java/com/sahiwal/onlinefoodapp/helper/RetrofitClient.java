@@ -15,7 +15,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "http://192.168.1.109:8080/";
+    private static final String BASE_URL = "http://192.168.1.118:8080/";
+
+
     private static Retrofit retrofit;
 
     public RetrofitClient() {
@@ -28,6 +30,8 @@ public class RetrofitClient {
     }
 
     public void callPayment(String amount, PaymentCallback callback) {
+        Log.d("PAYMENT", "we are on fun now");
+
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
 
         Map<String, Object> data = new HashMap<>();
@@ -37,6 +41,8 @@ public class RetrofitClient {
         call.enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                Log.d("PAYMENT", "we are on Request now");
+
                 if (response.isSuccessful() && response.body() != null) {
                     String clientSecret = response.body().get("clientSecret").toString();
                     Log.d("PAYMENT", "Client Secret: " + clientSecret);

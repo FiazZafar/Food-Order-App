@@ -9,16 +9,6 @@
     tools:context=".activities.CartActivity">
 
 
-    <ImageView
-        android:id="@+id/backBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:padding="4dp"
-        android:src="@drawable/arrow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/emptyTxt"
@@ -45,6 +35,18 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <ImageView
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+
+                android:padding="4dp"
+                android:src="@drawable/arrow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/cartHTxt"
+                app:layout_constraintTop_toTopOf="@+id/cartHTxt" />
             <TextView
                 android:id="@+id/cartHTxt"
                 android:layout_width="match_parent"

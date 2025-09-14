@@ -85,7 +85,7 @@
                 android:background="@drawable/edit_text_bg"
                 android:padding="16dp"
                 android:textSize="16sp"
-                android:inputType="text"
+                android:inputType="textEmailAddress"
                 android:hint="email text"
                 android:textColorHint="@color/black"
                 android:textColor="@color/black"
@@ -110,6 +110,7 @@
                     android:layout_weight="1"
                     android:importantForAutofill="no"
                     android:inputType="textPassword"
+
                     android:padding="16dp"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"

@@ -19,10 +19,17 @@ public class IntroActivity extends BasicActivity {
 
         if (mAuth.getCurrentUser() != null){
             startActivity(new Intent(this, MainActivity.class));
+            finish();
         }else {
 
-            binding.signUpBtn.setOnClickListener(v ->startActivity(new Intent(this, SignupActivity.class)));
-            binding.loginBtn.setOnClickListener(v ->startActivity(new Intent(this, LoginActivity.class)));
+            binding.signUpBtn.setOnClickListener(v ->{
+                startActivity(new Intent(this, SignupActivity.class));
+                finish();
+            });
+            binding.loginBtn.setOnClickListener(v ->{
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            });
 
         }
     }

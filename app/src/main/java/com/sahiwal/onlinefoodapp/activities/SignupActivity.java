@@ -38,7 +38,10 @@ public class SignupActivity extends BasicActivity {
         preferences = getSharedPreferences("UsersProfilePref",MODE_PRIVATE);
         editor = preferences.edit();
         binding.signUpBtn.setOnClickListener(v ->setElements());
-        binding.loginBtn.setOnClickListener(v -> startActivity(new Intent(this,LoginActivity.class)));
+        binding.loginBtn.setOnClickListener(v -> {
+            startActivity(new Intent(this,LoginActivity.class));
+            finish();
+        });
 
         binding.eyeVisiblePasBTn.setOnClickListener(view -> {
             if (binding.passwordTxt.getInputType() == (InputType.TYPE_CLASS_TEXT
@@ -98,13 +101,14 @@ public class SignupActivity extends BasicActivity {
         mAuth.createUserWithEmailAndPassword(emailTxt,passwordTxt)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
-                        Toast.makeText(SignupActivity.this, "Login Succeessfull...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this, "Signup Succeessfull...", Toast.LENGTH_SHORT).show();
                         editor.putString("userName",userName);
                         editor.putString("userEmail",emailTxt);
                         editor.apply();
                         startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                        finish();
                     }else {
-                        Toast.makeText(this, "Login failed...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Signup failed...", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

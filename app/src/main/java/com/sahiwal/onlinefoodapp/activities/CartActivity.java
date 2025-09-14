@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.adapters.CartAdapter;
 import com.sahiwal.onlinefoodapp.databinding.ActivityCartBinding;
 import com.sahiwal.onlinefoodapp.helper.OrderEnum;
@@ -54,24 +56,22 @@ public class CartActivity extends BasicActivity {
         SharedPreferences preferences = getSharedPreferences("UsersProfilePref",MODE_PRIVATE);
         address = preferences.getString("Address",null);
 
-        String publish_key = "pk_test_51QWyBoBqyIue1vHwZaXj0h9bNYBZIeMv84r1er9BQCZ" +
-                "IsdU4VM7EjsfXXRbtRxvBLWN4bZx9YyvSgPL4rjgzlOoi003Iw1L9r2";
-        PaymentConfiguration.init(this,publish_key);
+        PaymentConfiguration.init(this, getString(R.string.publish_key));
         paymentSheet = new PaymentSheet(this,this::onPaymentSheetResult);
 
         if (address != null){
             binding.userAddress.setText(address);
         }
-        binding.backBtn.setOnClickListener(view -> finish());
-        cartsMVVM.getMyCarts().observe(this,list -> {
-            if (list != null){
+        binding.backBtn.setOnClickListener(view -> onBackPressed());
+        cartsMVVM.getMyCarts().observe(this, list -> {
+            if (list != null) {
+                myList.clear();
                 myList.addAll(list);
-
                 calculateCart();
-
                 initList();
             }
         });
+
 
         binding.addAddressBtn.setOnClickListener(view -> {
             mapSettings();
@@ -83,6 +83,7 @@ public class CartActivity extends BasicActivity {
                 Toast.makeText(this, "Payment Method is on Backend server which is not accessible.", Toast.LENGTH_SHORT).show();
             }
         });
+
         binding.placeOrderBtn.setOnClickListener(view ->{
             if (totals > 0){
                 if (address != null){
@@ -140,14 +141,16 @@ public class CartActivity extends BasicActivity {
     private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
             Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
-            if (updateOrderHistory()){
-               onBackPressed();
-            }
+//            if (updateOrderHistory()){
+               startActivity(new Intent(this,OrdersActivity.class));
+               finish();
+//            }
         } else if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
             Toast.makeText(this, "Payment Canceled", Toast.LENGTH_SHORT).show();
         } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
             String error = ((PaymentSheetResult.Failed) paymentSheetResult).getError().getMessage();
-            Toast.makeText(this, "Payment Failed: " + error, Toast.LENGTH_LONG).show();
+            Log.d("Payment", "onPaymentSheetResult: the result is :" + error);
+            Toast.makeText(this, "Payment Failed:. " + error, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -208,8 +211,4 @@ public class CartActivity extends BasicActivity {
         return fee;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

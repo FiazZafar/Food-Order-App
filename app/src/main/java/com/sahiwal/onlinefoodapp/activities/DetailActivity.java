@@ -2,9 +2,11 @@ package com.sahiwal.onlinefoodapp.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
+import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.databinding.ActivityDetailBinding;
 import com.sahiwal.onlinefoodapp.models.Food;
 import com.sahiwal.onlinefoodapp.mvvm.DetailMVVM;
@@ -39,6 +41,13 @@ public class DetailActivity extends BasicActivity {
                 binding.ratingTxt.setText(String.valueOf(foodObj.getStar()));
                 binding.totalPriceTxt.setText(String.valueOf(num * foodObj.getPrice()));
                 Glide.with(this).load(foodObj.getImagePath()).into(binding.productImage);
+                if (foodObj.getFav() != null && foodObj.getFav()) {
+                    binding.favoriteItems.setImageResource(R.drawable.baseline_favorite_24);
+                } else {
+                    binding.favoriteItems.setImageResource(R.drawable.baseline_favorite_border_24);
+                }
+
+
 
                 binding.plusBtn.setOnClickListener(view ->{
                     num = num + 1;
@@ -67,21 +76,28 @@ public class DetailActivity extends BasicActivity {
                     });
                 });
                 binding.favoriteItems.setOnClickListener(view -> {
-                    if (foodObj.getFav() != null){
-                        if (!foodObj.getFav()){
-                        Toast.makeText(this, "Added to favourite's", Toast.LENGTH_SHORT).show();
-                        foodObj.setFav(true);
-                        myCarts.setAddToFavStatus(foodObj);
-                        }else {
-                        Toast.makeText(this, "Removed from favourite's", Toast.LENGTH_SHORT).show();
+                    Boolean currentFav = foodObj.getFav();
+
+                    if (currentFav != null && currentFav) {
+                        // It was fav → remove
+                        Log.d("ItemFav", "setElements: item is true on click -> removing fav");
+
                         foodObj.setFav(false);
-                        myCarts.setAddToFavStatus(foodObj);
-                        }
-                    }else {
+                        binding.favoriteItems.setImageResource(R.drawable.baseline_favorite_border_24);
+                        Toast.makeText(this, "Removed from favourite's", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // It was null or false → add
+                        Log.d("ItemFav", "setElements: item is false/null on click -> adding fav");
+
                         foodObj.setFav(true);
-                        myCarts.setAddToFavStatus(foodObj);
+                        binding.favoriteItems.setImageResource(R.drawable.baseline_favorite_24);
+                        Toast.makeText(this, "Added to favourite's", Toast.LENGTH_SHORT).show();
                     }
+
+                    // Always update status in DB/VM
+                    myCarts.setAddToFavStatus(foodObj);
                 });
+
             }
     }
     private void getIntents() {

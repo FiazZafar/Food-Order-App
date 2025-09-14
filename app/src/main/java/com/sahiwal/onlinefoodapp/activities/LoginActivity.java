@@ -25,8 +25,11 @@ public class LoginActivity extends BasicActivity {
 
 
         binding.loginBtn.setOnClickListener(v -> getCredentials());
-        binding.signUpBtn.setOnClickListener(v ->
-                startActivity(new Intent(this, SignupActivity.class)));
+        binding.signUpBtn.setOnClickListener(v ->{
+
+            startActivity(new Intent(this, SignupActivity.class));
+            finish();
+        });
 
         binding.eyeVisibleconfirmBTn.setOnClickListener(view -> {
             if (binding.passwordTxt.getInputType() == (InputType.TYPE_CLASS_TEXT
@@ -67,6 +70,9 @@ public class LoginActivity extends BasicActivity {
                 editor.putString("userEmail",emailTxt);
                 editor.apply();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+            }else {
+                Toast.makeText(this, "Login failed, user Does not exist.", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.sahiwal.onlinefoodapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -50,6 +51,9 @@ public class FavFoodAdapter extends RecyclerView.Adapter<FavFoodAdapter.ViewHold
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("object", (Serializable) myFood);
                     context.startActivity(intent);
+                    if (context instanceof Activity){
+                        ((Activity) context).finish();
+                    }
                 }
         );
     }

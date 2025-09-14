@@ -2,4 +2,5 @@
     <string name="app_name">ZaikaHub</string>
     <string name="lorem34">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non libero ut nunc faucibus convallis. Integer luctus, mauris at hendrerit fringilla, lectus eros viverra risus, ac fermentum ex sapien.</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="publish_key">pk_test_51QWyBoBqyIue1vHwZaXj0h9bNYBZIeMv84r1er9BQCZIsdU4VM7EjsfXXRbtRxvBLWN4bZx9YyvSgPL4rjgzlOoi003Iw1L9r2</string>
 </resources>

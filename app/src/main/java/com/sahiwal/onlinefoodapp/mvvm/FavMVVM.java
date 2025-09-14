@@ -29,4 +29,5 @@ public class FavMVVM extends ViewModel {
                 setFav.setValue(new ArrayList<>());
         });
     }
+
 }
