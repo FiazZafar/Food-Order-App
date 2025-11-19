@@ -54,6 +54,7 @@ public class OrdersActivity extends AppCompatActivity {
                 orderHistoryList.clear();
                 orderHistoryList.addAll(orderList);
 
+                // Refresh adapter — no need to set adapter again!
                 orderAdapter.notifyDataSetChanged();
 
             } else {

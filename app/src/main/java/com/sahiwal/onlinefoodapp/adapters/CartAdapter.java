@@ -1,7 +1,9 @@
 package com.sahiwal.onlinefoodapp.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.auth.FirebaseAuth;
 import com.sahiwal.onlinefoodapp.FbInterfaces.CartsInterface;
 import com.sahiwal.onlinefoodapp.R;
+import com.sahiwal.onlinefoodapp.activities.MainActivity;
 import com.sahiwal.onlinefoodapp.firebaseHelpers.CartsFb;
 import com.sahiwal.onlinefoodapp.interfaces.ChangeNumberItemsListener;
 import com.sahiwal.onlinefoodapp.models.Food;
@@ -92,12 +95,29 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             }
         });
 
-        holder.itemView.setOnLongClickListener(view -> {
-            cartsInterface.removeOneFromCart(userId, String.valueOf(myFood.getId()), onRemove -> {
-                foodArrayList.remove(position);
-                notifyItemRemoved(position);
+        holder.deleteItem.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Delete");
+            builder.setMessage("Are you sure you want to delete this item?");
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                cartsInterface.removeOneFromCart(userId, String.valueOf(myFood.getId()), onRemove -> {
+                    if (onRemove){
+                        foodArrayList.remove(position);
+                        notifyItemRemoved(position);
+                        if (changeNumberItemsListener != null) {
+                            changeNumberItemsListener.change(foodArrayList);
+                        }
+                    }
+                });
             });
-            return true;
+
+            builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+
+
         });
     }
 
@@ -109,7 +129,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView title,price,totalPrice,plusBtn,minusBtn,quantity;
-        ImageView image;
+        ImageView image,deleteItem;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -120,6 +140,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             minusBtn = itemView.findViewById(R.id.minusBtn);
             quantity = itemView.findViewById(R.id.totalQuantity);
             image = itemView.findViewById(R.id.productImageCart);
+            deleteItem = itemView.findViewById(R.id.deleteItem);
         }
     }
 }

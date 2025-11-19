@@ -173,6 +173,7 @@ public class CartActivity extends BasicActivity {
                 totals,address, OrderEnum.PENDING));
     }
 
+
     private void initList() {
     if (myList.isEmpty()){
         binding.cartScrollview.setVisibility(GONE);
@@ -184,10 +185,8 @@ public class CartActivity extends BasicActivity {
         binding.cartRecycler.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL,false));
         binding.cartRecycler.setAdapter(new CartAdapter(myList,onUpdatedList -> {
-            if (onUpdatedList != null) {
-                myList = new ArrayList<>(onUpdatedList);
-                calculateCart();
-            }}));
+            cartsMVVM.setMyCarts();
+        }));
     }
 
 
