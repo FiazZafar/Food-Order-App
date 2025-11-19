@@ -25,6 +25,8 @@ public class CartsMVVM extends ViewModel {
     CartsInterface cartsInterface = new CartsFb();
     OrdersInterface ordersInterface = new OrdersFB();
     private MutableLiveData<List<Food>> myCarts = new MutableLiveData<>();
+    private MutableLiveData<Boolean> removeCart = new MutableLiveData<>();
+
     private MutableLiveData<Boolean> myOrders = new MutableLiveData<>();
     private MutableLiveData<Boolean> paymentMethod = new MutableLiveData<>();
 
@@ -67,6 +69,15 @@ public class CartsMVVM extends ViewModel {
     }
     public MutableLiveData<List<Food>> getMyCarts() {
         return myCarts;
+    }
+    public MutableLiveData<Boolean> getRemoveCart() {
+        return removeCart;
+    }
+    public void setRemoveCart(){
+        String userId = FirebaseAuth.getInstance().getUid();
+        cartsInterface.removeFromCart(userId,isRemoved -> {
+            removeCart.setValue(isRemoved);
+        });
     }
 
     public void setMyCarts() {

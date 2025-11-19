@@ -75,7 +75,7 @@ public class ProfileScreen extends AppCompatActivity {
            }
         });
         binding.updatePassword.setOnClickListener(view -> {
-           FirebaseAuth.getInstance().sendPasswordResetEmail("Hello Fiaz");
+           FirebaseAuth.getInstance().sendPasswordResetEmail(userEmail);
         });
     }
     private void mapSettings() {

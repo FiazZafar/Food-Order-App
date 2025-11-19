@@ -16,7 +16,7 @@ import com.sahiwal.onlinefoodapp.R;
 import com.sahiwal.onlinefoodapp.helper.TinyDB;
 
 public class BasicActivity extends AppCompatActivity {
-    FirebaseAuth mAuth ;
+    protected FirebaseAuth mAuth ;
     FirebaseDatabase mDatabase;
     TinyDB tinyDB;
 

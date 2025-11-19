@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
+    android:layout_marginVertical="32dp"
+
     android:background="@color/backgroundColor"
     tools:context=".activities.OrdersActivity">
 
@@ -24,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Title"
+        android:text="Order's History"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="21sp"
@@ -39,7 +40,7 @@
         android:text="No result found"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:textStyle="italic"
+        android:textStyle="normal"
         android:layout_marginTop="12dp"
         android:visibility="gone"
         android:gravity="center"
@@ -50,14 +51,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/orderListRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="0dp"
+        android:paddingBottom="32dp"
+        android:paddingTop="32dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/listTitle"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toBottomOf="parent" />
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

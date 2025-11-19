@@ -53,6 +53,7 @@ public class CartActivity extends BasicActivity {
         cartsMVVM.setMyCarts();
 
         myList = new ArrayList<>();
+
         SharedPreferences preferences = getSharedPreferences("UsersProfilePref",MODE_PRIVATE);
         address = preferences.getString("Address",null);
 
@@ -62,8 +63,12 @@ public class CartActivity extends BasicActivity {
         if (address != null){
             binding.userAddress.setText(address);
         }
+        binding.progressBar.setVisibility(VISIBLE);
+        binding.cartScrollview.setVisibility(GONE);
         binding.backBtn.setOnClickListener(view -> onBackPressed());
         cartsMVVM.getMyCarts().observe(this, list -> {
+            binding.progressBar.setVisibility(GONE);
+
             if (list != null) {
                 myList.clear();
                 myList.addAll(list);
@@ -142,8 +147,17 @@ public class CartActivity extends BasicActivity {
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
             Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
 //            if (updateOrderHistory()){
-               startActivity(new Intent(this,OrdersActivity.class));
-               finish();
+            cartsMVVM.setRemoveCart();
+               cartsMVVM.getRemoveCart().observe(this,isRemoved -> {
+                   if (isRemoved){
+                       updateOrderHistory();
+                       startActivity(new Intent(this,MainActivity.class));
+                       finish();
+                   } else {
+                       Toast.makeText(this, "Failed to remove", Toast.LENGTH_SHORT).show();
+
+                   }
+               });
 //            }
         } else if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
             Toast.makeText(this, "Payment Canceled", Toast.LENGTH_SHORT).show();
@@ -154,16 +168,9 @@ public class CartActivity extends BasicActivity {
         }
     }
 
-    private Boolean updateOrderHistory() {
-        AtomicReference<Boolean> isUpdated = new AtomicReference<>(false);
+    private void updateOrderHistory() {
         cartsMVVM.setOrdersInterface(new OrderHistory(myList.size(),
                 totals,address, OrderEnum.PENDING));
-        cartsMVVM.getOrderStatus().observe(this,onSaved -> {
-            if (onSaved) {
-                isUpdated.set(onSaved);
-            }
-        });
-        return isUpdated.get();
     }
 
     private void initList() {

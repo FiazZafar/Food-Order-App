@@ -3,7 +3,6 @@ package com.sahiwal.onlinefoodapp.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Window;
 import com.sahiwal.onlinefoodapp.databinding.ActivityIntroBinding;
 
 public class IntroActivity extends BasicActivity {
@@ -17,11 +16,6 @@ public class IntroActivity extends BasicActivity {
         setContentView(binding.getRoot());
         getWindow().setStatusBarColor(Color.parseColor("#FFE4B5"));
 
-        if (mAuth.getCurrentUser() != null){
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }else {
-
             binding.signUpBtn.setOnClickListener(v ->{
                 startActivity(new Intent(this, SignupActivity.class));
                 finish();
@@ -31,6 +25,5 @@ public class IntroActivity extends BasicActivity {
                 finish();
             });
 
-        }
     }
 }
