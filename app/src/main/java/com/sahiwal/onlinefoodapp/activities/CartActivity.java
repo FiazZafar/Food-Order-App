@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -92,7 +94,22 @@ public class CartActivity extends BasicActivity {
         binding.placeOrderBtn.setOnClickListener(view ->{
             if (totals > 0){
                 if (address != null){
-                    cartsMVVM.setPaymentMethod(totals,paymentSheet);
+//                    cartsMVVM.setPaymentMethod(totals,paymentSheet);
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        Toast.makeText(this, "Sorry! payment method is not available because backend is not live for now.", Toast.LENGTH_SHORT).show();
+                        cartsMVVM.setRemoveCart();
+                        cartsMVVM.getRemoveCart().observe(this,isRemoved -> {
+                            if (isRemoved){
+                                updateOrderHistory();
+                                startActivity(new Intent(this,MainActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                    }, 500);
+
                 }else {
                     Toast.makeText(this, "Empty address", Toast.LENGTH_SHORT).show();
                 }
